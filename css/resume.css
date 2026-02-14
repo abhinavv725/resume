@@ -103,7 +103,7 @@ p.lead {
     width: 12rem;
     height: 12rem;
     object-fit: cover;
-    object-position: center 30%;
+    object-position: 100% 30%;
     border: 0.5rem solid rgba(255, 255, 255, 0.2);
   }
   #sideNav .navbar-collapse {
