@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .resume-section {
+    @apply py-20 px-6 sm:px-10;
+  }
+
+  .resume-section-content {
+    @apply max-w-4xl mx-auto;
+  }
+
+  .section-heading {
+    @apply font-condensed text-5xl sm:text-6xl font-bold uppercase tracking-wide text-slate-900 mb-10;
+    position: relative;
+    padding-bottom: 1rem;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 2.5rem;
+    height: 3px;
+    @apply bg-sky-500 rounded-full;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Offset anchor targets below fixed navbar */
+section[id] {
+  scroll-margin-top: 4rem;
+}

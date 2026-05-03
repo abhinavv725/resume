@@ -1,0 +1,46 @@
+---
+const certifications = [
+  { name: 'AWS Solutions Architect Associate', url: 'https://cp.certmetrics.com/amazon/en/public/verify/credential/H2Z4FF1C5BFQ1MKH' },
+  { name: 'AWS Certified Developer Associate',  url: 'https://cp.certmetrics.com/amazon/en/public/verify/credential/4S0PYRE2YNV1Q55K' },
+  { name: 'AWS SysOps Administrator Associate', url: 'https://cp.certmetrics.com/amazon/en/public/verify/credential/BXCMD3MC0ME4QN53' },
+  { name: 'AWS Cloud Practitioner',             url: 'https://cp.certmetrics.com/amazon/en/public/verify/credential/24GFQTDLPJB4QB5V' },
+];
+
+const achievements = [
+  { icon: 'fas fa-trophy', text: '<strong>850+</strong> coding questions solved on <a href="https://leetcode.com/u/abhinav_725/" target="_blank" class="text-sky-600 hover:underline">LeetCode</a>' },
+  { icon: 'fas fa-trophy', text: '<strong>500+</strong> coding questions solved on <a href="https://www.geeksforgeeks.org/user/abhinavv_725/" target="_blank" class="text-sky-600 hover:underline">GeeksForGeeks</a>' },
+  { icon: 'fas fa-graduation-cap', text: 'Scored <strong>9.8 CGPA</strong> — CSE, Chitkara University' },
+  { icon: 'fas fa-medal', text: 'Winner of <strong>HackWithHer</strong> coding hackathon at Chitkara University' },
+];
+---
+<section id="awards" class="resume-section">
+  <div class="resume-section-content">
+    <h2 class="section-heading">Awards & Certifications</h2>
+
+    <div class="mb-10">
+      <h3 class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">Certifications</h3>
+      <div class="grid sm:grid-cols-2 gap-3">
+        {certifications.map((cert) => (
+          <a href={cert.url} target="_blank"
+             class="flex items-center gap-3 p-4 border border-slate-200 rounded-xl hover:border-sky-300 hover:bg-sky-50 transition-all group">
+            <i class="fas fa-certificate text-yellow-400 text-xl flex-shrink-0"></i>
+            <span class="text-slate-700 font-medium text-sm group-hover:text-sky-700">{cert.name}</span>
+            <i class="fas fa-external-link-alt text-slate-300 text-xs ml-auto group-hover:text-sky-400"></i>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div>
+      <h3 class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">Achievements</h3>
+      <ul class="space-y-3">
+        {achievements.map((item) => (
+          <li class="flex items-start gap-3 text-slate-600">
+            <i class={`${item.icon} text-yellow-400 mt-0.5 flex-shrink-0`}></i>
+            <span set:html={item.text} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

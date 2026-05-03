@@ -1,0 +1,74 @@
+---
+const skillGroups = [
+  {
+    label: 'Programming',
+    items: ['JavaScript', 'TypeScript', 'Python', 'Java', 'Go', 'Bash', 'Terraform', 'YAML'],
+  },
+  {
+    label: 'Cloud & Infrastructure',
+    items: ['AWS', 'Kubernetes', 'EKS', 'Docker', 'Crossplane', 'Lambda', 'Step Functions', 'Fargate', 'EC2', 'S3', 'Route53', 'DynamoDB', 'SQS', 'SNS', 'CloudWatch', 'IAM', 'CloudWAN', 'Transit Gateway', 'Transfer Family', 'Identity Center'],
+  },
+  {
+    label: 'CI/CD & GitOps',
+    items: ['GitHub Actions', 'ArgoCD', 'Helm', 'Jenkins'],
+  },
+  {
+    label: 'Messaging & Streaming',
+    items: ['Apache Kafka', 'Apache Pulsar', 'DAPR'],
+  },
+  {
+    label: 'Databases',
+    items: ['DynamoDB', 'PostgreSQL', 'MySQL', 'MongoDB', 'AWS RDS'],
+  },
+  {
+    label: 'Observability',
+    items: ['Splunk', 'CloudWatch', 'Grafana', 'OpsGenie'],
+  },
+  {
+    label: 'Tools',
+    items: ['Git', 'GitHub', 'Bitbucket', 'Jira', 'Confluence', 'Postman'],
+  },
+];
+
+const devIcons = [
+  { icon: 'fab fa-python',     label: 'Python' },
+  { icon: 'fab fa-java',       label: 'Java' },
+  { icon: 'fab fa-js-square',  label: 'JavaScript' },
+  { icon: 'fab fa-aws',        label: 'AWS' },
+  { icon: 'fab fa-docker',     label: 'Docker' },
+  { icon: 'fab fa-jenkins',    label: 'Jenkins' },
+  { icon: 'fab fa-github',     label: 'GitHub' },
+  { icon: 'fab fa-git-alt',    label: 'Git' },
+  { icon: 'fab fa-bitbucket',  label: 'Bitbucket' },
+  { icon: 'fab fa-node-js',    label: 'Node.js' },
+];
+---
+<section id="skills" class="resume-section bg-slate-50">
+  <div class="resume-section-content">
+    <h2 class="section-heading">Skills</h2>
+
+    <div class="flex flex-wrap gap-5 mb-10">
+      {devIcons.map(({ icon, label }) => (
+        <div class="flex flex-col items-center gap-1 text-slate-400 hover:text-sky-500 transition-colors">
+          <i class={`${icon} text-3xl`}></i>
+          <span class="text-xs">{label}</span>
+        </div>
+      ))}
+    </div>
+
+    <div class="space-y-5">
+      {skillGroups.map((group) => (
+        <div>
+          <h3 class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-2">{group.label}</h3>
+          <div class="flex flex-wrap gap-2">
+            {group.items.map((item) => (
+              <span class="px-3 py-1 bg-white border border-slate-200 text-slate-700 text-sm rounded-full font-medium">
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

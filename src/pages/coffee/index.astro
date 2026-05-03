@@ -1,0 +1,154 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { coffeeGear } from '../../data/coffee';
+import beansData from '../../data/coffee-beans.json';
+import '../../styles/global.css';
+
+function beanImg(bean: { imageUrl?: string; imageAsset?: string }) {
+  return bean.imageUrl ?? bean.imageAsset ?? null;
+}
+
+function gearImg(item: { image?: string; imageUrl?: string }) {
+  return item.imageUrl ?? item.image ?? null;
+}
+
+const categoryColors: Record<string, string> = {
+  Brewer:  'bg-amber-50 text-amber-700 border-amber-200',
+  Grinder: 'bg-orange-50 text-orange-700 border-orange-200',
+  Kettle:  'bg-blue-50 text-blue-700 border-blue-200',
+  Scale:   'bg-green-50 text-green-700 border-green-200',
+  Cup:     'bg-pink-50 text-pink-700 border-pink-200',
+  Other:   'bg-slate-50 text-slate-600 border-slate-200',
+};
+---
+
+<Layout title="Coffee — Abhinav Verma">
+  <Nav />
+  <main class="pt-16">
+    <div class="max-w-4xl mx-auto px-6 sm:px-10 py-16">
+
+      <!-- Header -->
+      <a href="/#coffee" class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-700 transition-colors mb-6">
+        <i class="fas fa-arrow-left text-xs"></i> Back
+      </a>
+      <h1 class="font-condensed text-5xl sm:text-6xl font-bold uppercase tracking-wide text-slate-900 mb-12">
+        Coffee
+      </h1>
+
+      <!-- Filter bar -->
+      <div class="flex gap-2 mb-10" id="filter-bar">
+        <button data-filter="beans"
+          class="filter-btn px-5 py-1.5 rounded-full text-sm font-medium bg-white border border-slate-200 text-slate-600 transition-colors">
+          Beans
+        </button>
+        <button data-filter="setup"
+          class="filter-btn px-5 py-1.5 rounded-full text-sm font-medium bg-white border border-slate-200 text-slate-600 transition-colors">
+          Setup
+        </button>
+      </div>
+
+      <!-- All beans -->
+      <div id="section-beans">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-16">
+        {beansData.map(bean => {
+          const img = beanImg(bean);
+          return (
+            <a href={bean.link} target="_blank"
+               class="group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:border-yellow-300 hover:shadow-md transition-all">
+              <div class="aspect-[3/4] bg-slate-50 overflow-hidden flex items-center justify-center">
+                {img ? (
+                  <img src={img} alt={bean.name}
+                       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                ) : (
+                  <span class="text-5xl">☕</span>
+                )}
+              </div>
+              <div class="p-4">
+                <p class="font-semibold text-slate-800 text-sm leading-snug mb-1">{bean.name}</p>
+                <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">{bean.description}</p>
+                <p class="mt-3 text-xs text-sky-500 group-hover:underline inline-flex items-center gap-1">
+                  Buy <i class="fas fa-external-link-alt text-[9px]"></i>
+                </p>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+
+      </div> <!-- /section-beans -->
+
+      <!-- Gear -->
+      <div id="section-setup">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {coffeeGear.map(item => {
+          const img = gearImg(item);
+          return (
+            <div class="group border border-slate-200 rounded-2xl overflow-hidden hover:border-amber-200 hover:shadow-md transition-all bg-white">
+              <div class="aspect-[3/4] bg-slate-50 flex items-center justify-center overflow-hidden">
+                {img ? (
+                  <img src={img} alt={item.name}
+                       class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" />
+                ) : (
+                  <i class="fas fa-coffee text-4xl text-slate-300"></i>
+                )}
+              </div>
+              <div class="p-3">
+                <div class="flex items-start justify-between gap-1 mb-1">
+                  <p class="font-semibold text-slate-800 text-xs leading-snug">{item.name}</p>
+                  <span class={`text-[9px] px-1.5 py-0.5 rounded-full font-medium border whitespace-nowrap flex-shrink-0 ${categoryColors[item.category] ?? categoryColors.Other}`}>
+                    {item.category}
+                  </span>
+                </div>
+                <p class="text-slate-400 text-[11px] leading-relaxed line-clamp-2">{item.description}</p>
+                {item.link && (
+                  <a href={item.link} target="_blank"
+                     class="inline-flex items-center gap-1 mt-2 text-[11px] text-sky-500 hover:underline">
+                    Buy <i class="fas fa-external-link-alt text-[9px]"></i>
+                  </a>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      </div> <!-- /section-setup -->
+
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const sections: Record<string, HTMLElement | null> = {
+    beans: document.getElementById('section-beans'),
+    setup: document.getElementById('section-setup'),
+  };
+
+  function applyFilter(filter: string) {
+    filterBtns.forEach(b => {
+      const active = b.dataset.filter === filter;
+      b.classList.toggle('bg-slate-900', active);
+      b.classList.toggle('text-white',   active);
+      b.classList.toggle('bg-white',     !active);
+      b.classList.toggle('border',       !active);
+      b.classList.toggle('border-slate-200', !active);
+      b.classList.toggle('text-slate-600',   !active);
+    });
+
+    Object.entries(sections).forEach(([key, el]) => {
+      if (el) el.style.display = key === filter ? 'block' : 'none';
+    });
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('q', filter);
+    history.replaceState(null, '', url.toString());
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => applyFilter(btn.dataset.filter!));
+  });
+
+  const initial = new URLSearchParams(window.location.search).get('q') ?? 'beans';
+  applyFilter(initial);
+</script>

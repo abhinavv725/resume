@@ -1,0 +1,113 @@
+---
+import { coffeeGear } from '../data/coffee';
+import beansData from '../data/coffee-beans.json';
+
+const latestBeans = beansData.slice(0, 4);
+
+const categoryColors: Record<string, string> = {
+  Brewer:  'bg-amber-50 text-amber-700 border-amber-200',
+  Grinder: 'bg-orange-50 text-orange-700 border-orange-200',
+  Kettle:  'bg-blue-50 text-blue-700 border-blue-200',
+  Scale:   'bg-green-50 text-green-700 border-green-200',
+  Cup:     'bg-pink-50 text-pink-700 border-pink-200',
+  Other:   'bg-slate-50 text-slate-600 border-slate-200',
+};
+
+function gearImg(item: { image?: string; imageUrl?: string }) {
+  return item.imageUrl ?? item.image ?? null;
+}
+
+function beanImg(bean: { imageUrl?: string; imageAsset?: string }) {
+  return bean.imageUrl ?? bean.imageAsset ?? null;
+}
+---
+
+<section id="coffee" class="resume-section bg-white">
+  <div class="max-w-4xl mx-auto px-6 sm:px-10">
+
+    <!-- Heading -->
+    <div class="flex items-end justify-between mb-8">
+      <h2 class="section-heading !mb-0">Coffee</h2>
+      <a href="/coffee" class="text-sm font-medium text-sky-600 hover:text-sky-500 transition-colors whitespace-nowrap">
+        View all beans →
+      </a>
+    </div>
+
+    <!-- Beans label -->
+    <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">Beans</p>
+
+    <!-- Horizontal scroll -->
+    <div class="flex gap-5 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory">
+      {latestBeans.map(bean => {
+        const img = beanImg(bean);
+        return (
+          <a href={bean.link} target="_blank"
+             class="group flex-none w-36 snap-start bg-white border border-slate-200 rounded-2xl overflow-hidden hover:border-yellow-300 hover:shadow-md transition-all">
+            <div class="aspect-[3/4] bg-slate-50 overflow-hidden flex items-center justify-center">
+              {img ? (
+                <img src={img} alt={bean.name}
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+              ) : (
+                <span class="text-4xl">☕</span>
+              )}
+            </div>
+            <div class="p-3">
+              <p class="font-semibold text-slate-800 text-xs leading-snug mb-1">{bean.name}</p>
+              <p class="text-slate-400 text-[11px] leading-relaxed line-clamp-2">{bean.description}</p>
+            </div>
+          </a>
+        );
+      })}
+
+      <!-- End cap -->
+      <a href="/coffee"
+         class="group flex-none w-36 snap-start flex flex-col items-center justify-center aspect-[3/4] rounded-2xl border-2 border-dashed border-slate-200 hover:border-amber-300 text-slate-400 hover:text-amber-500 transition-colors self-start mt-0">
+        <i class="fas fa-mug-hot text-2xl mb-2"></i>
+        <span class="text-xs font-semibold text-center leading-tight">All {beansData.length}<br />beans</span>
+      </a>
+    </div>
+
+    <!-- Gear -->
+    <div class="mt-12">
+      <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">Setup</p>
+      <div class="flex gap-5 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory">
+        {coffeeGear.map(item => {
+          const img = gearImg(item);
+          return (
+            <div class="group flex-none w-36 snap-start border border-slate-200 rounded-2xl overflow-hidden hover:border-amber-200 hover:shadow-md transition-all bg-white">
+              <div class="aspect-[3/4] bg-slate-50 flex items-center justify-center overflow-hidden">
+                {img ? (
+                  <img src={img} alt={item.name}
+                       class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" />
+                ) : (
+                  <i class="fas fa-coffee text-4xl text-slate-300"></i>
+                )}
+              </div>
+              <div class="p-3">
+                <div class="flex items-start justify-between gap-1 mb-1">
+                  <p class="font-semibold text-slate-800 text-xs leading-snug">{item.name}</p>
+                  <span class={`text-[9px] px-1.5 py-0.5 rounded-full font-medium border whitespace-nowrap flex-shrink-0 ${categoryColors[item.category] ?? categoryColors.Other}`}>
+                    {item.category}
+                  </span>
+                </div>
+                <p class="text-slate-400 text-[11px] leading-relaxed line-clamp-2">{item.description}</p>
+                {item.link && (
+                  <a href={item.link} target="_blank"
+                     class="inline-flex items-center gap-1 mt-2 text-[11px] text-sky-500 hover:underline">
+                    Buy <i class="fas fa-external-link-alt text-[9px]"></i>
+                  </a>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>

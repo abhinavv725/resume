@@ -1,0 +1,79 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const books = await getCollection('books');
+  return books.map(book => ({ params: { slug: book.slug } }));
+}
+
+const { slug } = Astro.params;
+const book = await getEntry('books', slug);
+if (!book) return Astro.redirect('/');
+
+const { Content } = await book.render();
+
+function coverUrl(cover?: string, isbn?: string): string {
+  if (cover) return cover;
+  if (isbn) return `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+  return '/assets/img/book-placeholder.png';
+}
+
+function stars(rating: number) {
+  return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+}
+---
+
+<Layout title={`${book.data.title} — Abhinav Verma`} description={`Review of ${book.data.title} by ${book.data.author}`}>
+  <div class="min-h-screen bg-white">
+    <!-- Back nav -->
+    <div class="sticky top-0 z-10 bg-white/80 backdrop-blur border-b border-slate-100 px-6 py-3">
+      <a href="/#books" class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors">
+        <i class="fas fa-arrow-left text-xs"></i> Back to books
+      </a>
+    </div>
+
+    <div class="max-w-3xl mx-auto px-6 py-12">
+      <!-- Book header -->
+      <div class="flex flex-col sm:flex-row gap-8 mb-10">
+        <div class="flex-shrink-0">
+          <img
+            src={coverUrl(book.data.cover, book.data.isbn)}
+            alt={book.data.title}
+            class="w-36 sm:w-44 rounded-xl shadow-lg"
+            onerror="this.src='/assets/img/book-placeholder.png'"
+          />
+        </div>
+        <div class="flex flex-col justify-center">
+          <h1 class="font-condensed text-4xl sm:text-5xl font-bold text-slate-900 uppercase tracking-wide leading-tight mb-1">
+            {book.data.title}
+          </h1>
+          <p class="text-sky-600 font-medium text-lg mb-3">{book.data.author}</p>
+
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-yellow-400 text-xl tracking-tight">{stars(book.data.rating)}</span>
+            <span class="text-slate-400 text-sm">Read in {book.data.yearRead}</span>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            {book.data.tags.map(tag => (
+              <span class="px-3 py-1 bg-slate-100 text-slate-600 text-xs rounded-full font-medium">{tag}</span>
+            ))}
+          </div>
+
+          {book.data.goodreadsLink && (
+            <a href={book.data.goodreadsLink} target="_blank"
+               class="inline-flex items-center gap-2 mt-4 text-sm text-slate-400 hover:text-sky-500 transition-colors w-fit">
+              <i class="fab fa-goodreads-g"></i> View on Goodreads
+            </a>
+          )}
+        </div>
+      </div>
+
+      <!-- Review -->
+      <div class="prose prose-slate max-w-none">
+        <Content />
+      </div>
+    </div>
+  </div>
+</Layout>

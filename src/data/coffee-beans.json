@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Araku Selection",
+    "description": "Medium-dark roast. Honey, sugarcane, dark chocolate, caramel. The everyday go-to.",
+    "imageUrl": "https://www.arakucoffee.in/cdn/shop/files/Catalogue-23320_1.jpg?v=1687238088&width=800",
+    "link": "https://www.arakucoffee.in/products/selection"
+  },
+  {
+    "name": "Araku Signature",
+    "description": "Medium roast. Green pepper, cherry, dark chocolate — full of character with a long clean finish.",
+    "imageUrl": "https://www.arakucoffee.in/cdn/shop/files/SignaturePouch_56613a25-fa8a-4b32-a7cc-a523f1334a3a.jpg?v=1686925270&width=800",
+    "link": "https://www.arakucoffee.in/products/signature"
+  },
+  {
+    "name": "Araku Grand Reserve",
+    "description": "Medium roast. Floral, dates, citrus, tropical fruits. Silky and full-bodied.",
+    "imageUrl": "https://www.arakucoffee.in/cdn/shop/files/Catalogue-23311.jpg?v=1686923973&width=800",
+    "link": "https://www.arakucoffee.in/products/grande-reserve"
+  },
+  {
+    "name": "Araku Micro Climate",
+    "description": "Medium roast. Olives, honey, grapes, dried berry. Intensely fruity with a generous body.",
+    "imageUrl": "https://www.arakucoffee.in/cdn/shop/files/Catalogue-23361_7548b78e-db8d-49ec-a388-76117244a975.jpg?v=1687248782&width=800",
+    "link": "https://www.arakucoffee.in/products/micro-climate"
+  },
+  {
+    "name": "Honey Sun Dried",
+    "description": "Arabica from Chikmagalur. Cherry and orange rind. Pulped and sun-dried with thick mucilage — works great for espresso, Aeropress, or iced.",
+    "imageUrl": "https://www.thecaffeinebaar.com/cdn/shop/files/2_c9f76844-ec8a-4536-ac3b-5c198274ecef_1512x.jpg?v=1754036256",
+    "link": "https://www.thecaffeinebaar.com/collections/packaged-coffee/products/honey-sun-dried"
+  },
+  {
+    "name": "Pineapple Fermentation",
+    "description": "SLN 795 from Chikmagalur, fermented with fresh pineapple. Caramel, toasted nuts, fruit-forward filter roast.",
+    "imageUrl": "https://www.thecaffeinebaar.com/cdn/shop/files/2_49ceb44d-974e-4140-9948-917960cf2b30_1512x.jpg?v=1754036595",
+    "link": "https://www.thecaffeinebaar.com/collections/packaged-coffee/products/pineapple-fermentation-coffee"
+  },
+  {
+    "name": "House Blend Medium Roast",
+    "description": "Coorg blend, medium roast. Nutty, dark chocolate, lemongrass. Washed and sun-dried arabicas, smooth finish.",
+    "imageUrl": "https://humblebean.com/cdn/shop/products/MediumRoast.jpg?v=1676293274&width=800",
+    "link": "https://humblebean.com/products/house-blend-medium-roast"
+  },
+  {
+    "name": "Monsooned Malabar",
+    "description": "Indian Malabar coast. Woody spices, dark chocolate, nutty. Low acidity, earthy, bold.",
+    "imageUrl": "https://static.wixstatic.com/media/a45ca8_84a46a32c1e34800b689464000e1405d~mv2.png/v1/fit/w_500,h_500,q_90/file.png",
+    "link": "https://www.gbroastery.com/product-page/monsooned-malabar"
+  },
+  {
+    "name": "Mudremane Estate Washed",
+    "description": "Washed arabica. Black tea, floral, sugarcane sweetness with molasses hints. Complex and aromatic.",
+    "imageUrl": "https://static.wixstatic.com/media/a45ca8_1c8c1410aa774798b15671d1c9787a61~mv2.png/v1/fit/w_500,h_500,q_90/file.png",
+    "link": "https://www.gbroastery.com/product-page/mudremane-estate-washed"
+  },
+  {
+    "name": "Nitrogen Naturals",
+    "description": "Ratnagiri Estate. Anaerobic fermentation with lab-cultured yeast, 44 hours, then 26-day natural dry. Mixed berries, molasses, peach.",
+    "imageUrl": "https://coffeeverse.in/cdn/shop/files/Nitrogen_Naturals_Coffeeeverse_coffee_box_on_a_white_background.jpg?crop=center&height=800&v=1762327454&width=800",
+    "link": "https://coffeeverse.in/products/nitrogen-naturals"
+  },
+  {
+    "name": "Say Hello to Mellow",
+    "description": "Light roast single estate, fully washed. Banana, berry, bright and clean. Great as black coffee.",
+    "imageUrl": "https://www.maverickandfarmer.com/cdn/shop/products/496c2d11-712a-4a20-ad0a-48c459312008.jpg?v=1592208168&width=800",
+    "link": "https://www.maverickandfarmer.com/products/say-hello-to-mellow"
+  },
+  {
+    "name": "Apple of My Brew",
+    "description": "Chikmagalur anaerobic, shade-dried on raised tables. Apple compote, lemon verbena, sweet spice.",
+    "imageUrl": "https://elbuenocoffee.com/wp-content/uploads/2025/08/Apple-of-my-Brew.png",
+    "link": "https://elbuenocoffee.com/product/apple-of-my-brew/"
+  },
+  {
+    "name": "Riverdale Estate White Rose",
+    "description": "Yercaud, Tamil Nadu, 1450m. Light roast, natural process with rose petal fermentation. Blood orange, passion fruit, pomegranate.",
+    "imageUrl": "https://bluetokaicoffee.com/cdn/shop/files/01_RiverdaleEstate-WhiteRose__Front.jpg?v=1737957453&width=800",
+    "link": "https://bluetokaicoffee.com/products/riverdale-estate-white-rose-2"
+  },
+  {
+    "name": "Kalledevarapura Pulp Sun Dried",
+    "description": "Chikmagalur, 1280–1340m, S795. Medium roast, pulp sun-dried. Brown sugar, roasted almond, raisin, sweet mouthfeel.",
+    "imageUrl": "https://bluetokaicoffee.com/cdn/shop/files/Kalledevarapura-Front.jpg?v=1764321548&width=800",
+    "link": "https://bluetokaicoffee.com/products/kalledevarapura-pulp-sun-dried"
+  }
+]

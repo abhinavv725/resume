@@ -1,0 +1,40 @@
+---
+const education = [
+  {
+    school: 'Chitkara University, Baddi',
+    degree: 'Bachelor of Engineering — Computer Science',
+    grade: 'CGPA: 9.8 / 10',
+    period: 'July 2018 – May 2022',
+  },
+  {
+    school: 'Ch. Balbir Singh Public School',
+    degree: 'Class 12 · Punjab',
+    grade: 'Percentage: 75%',
+    period: '2018',
+  },
+  {
+    school: 'Triple M Public School',
+    degree: 'Class 10 · Punjab',
+    grade: 'Percentage: 97%',
+    period: '2016',
+  },
+];
+---
+<section id="education" class="resume-section">
+  <div class="resume-section-content">
+    <h2 class="section-heading">Education</h2>
+
+    <div class="space-y-8">
+      {education.map((entry) => (
+        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 pb-8 border-b border-slate-100 last:border-0 last:pb-0">
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">{entry.school}</h3>
+            <p class="text-sky-600 font-medium text-sm">{entry.degree}</p>
+            <p class="text-slate-500 text-sm mt-0.5">{entry.grade}</p>
+          </div>
+          <span class="text-sm text-slate-400 font-medium whitespace-nowrap">{entry.period}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

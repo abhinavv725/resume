@@ -1,0 +1,131 @@
+---
+import { getCollection } from 'astro:content';
+import { fetchGoodreadsBooks, fetchCurrentlyReading, normalizeTitle } from '../lib/goodreads';
+
+const reviewedEntries = await getCollection('books');
+const reviewMap = new Map(
+  reviewedEntries.map(e => [normalizeTitle(e.data.title), e.slug])
+);
+
+const [rssBooks, currentlyReading] = await Promise.all([
+  fetchGoodreadsBooks(),
+  fetchCurrentlyReading(),
+]);
+
+const fallback = reviewedEntries.map(e => ({
+  title: e.data.title,
+  author: e.data.author,
+  cover: e.data.cover ?? (e.data.isbn ? `https://covers.openlibrary.org/b/isbn/${e.data.isbn}-L.jpg` : ''),
+  goodreadsLink: e.data.goodreadsLink ?? '',
+  rating: e.data.rating,
+  yearRead: e.data.yearRead,
+  tags: e.data.tags,
+}));
+
+const allBooks = (rssBooks.length > 0 ? rssBooks : fallback)
+  .map(b => ({ ...b, reviewSlug: reviewMap.get(normalizeTitle(b.title)) ?? null }))
+  .sort((a, b) => (b.yearRead ?? 0) - (a.yearRead ?? 0));
+
+const latest = allBooks.slice(0, 12);
+const total = allBooks.length;
+
+function stars(r: number) {
+  return r > 0 ? '★'.repeat(r) + '☆'.repeat(5 - r) : '';
+}
+---
+
+<section id="books" class="resume-section bg-slate-50">
+  <div class="max-w-4xl mx-auto px-6 sm:px-10">
+    <div class="flex items-end justify-between mb-8">
+      <h2 class="section-heading !mb-0">Books</h2>
+      <a href="/books" class="text-sm font-medium text-sky-600 hover:text-sky-500 transition-colors whitespace-nowrap">
+        View all {total} →
+      </a>
+    </div>
+
+    <!-- Currently reading -->
+    {currentlyReading.length > 0 && (
+      <div class="mb-8">
+        <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">
+          Currently Reading
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          {currentlyReading.map(book => (
+            <a href={book.goodreadsLink} target="_blank"
+               class="group flex items-center gap-4 bg-white border border-slate-200 rounded-2xl p-4 hover:border-sky-200 hover:shadow-md transition-all flex-1 min-w-0">
+              <div class="flex-none w-14 aspect-[2/3] bg-slate-200 rounded-lg overflow-hidden shadow-sm">
+                <img
+                  src={book.cover}
+                  alt={book.title}
+                  loading="lazy"
+                  class="w-full h-full object-cover"
+                  onerror="this.onerror=null; this.style.display='none'"
+                />
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Reading
+                  </span>
+                </div>
+                <p class="font-semibold text-slate-800 text-sm leading-snug line-clamp-2">{book.title}</p>
+                <p class="text-xs text-slate-400 mt-0.5 truncate">{book.author}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Recently read -->
+    <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">Recently Read</p>
+    <div class="flex gap-5 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory">
+      {latest.map((book) => {
+        const href = book.reviewSlug ? `/books/${book.reviewSlug}` : book.goodreadsLink;
+        return (
+          <a href={href} target={book.reviewSlug ? undefined : '_blank'}
+             class="flex-none w-36 snap-start group">
+            <div class="relative aspect-[3/4] bg-slate-200 rounded-xl overflow-hidden shadow-sm group-hover:shadow-md transition-all duration-200">
+              <img
+                src={book.cover}
+                alt={book.title}
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                onerror="this.onerror=null; this.style.display='none'"
+              />
+              {book.reviewSlug && (
+                <div class="absolute bottom-0 left-0 right-0 bg-sky-500 text-white text-[9px] font-bold text-center py-1 tracking-wider uppercase">
+                  Review ✦
+                </div>
+              )}
+            </div>
+            <div class="mt-2 px-0.5">
+              <p class="text-xs font-semibold text-slate-800 line-clamp-2 leading-snug">{book.title}</p>
+              <p class="text-[11px] text-slate-400 mt-0.5 truncate">{book.author}</p>
+              <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                {book.rating > 0 && (
+                  <span class="text-yellow-400 text-[10px]">{stars(book.rating)}</span>
+                )}
+                {book.yearRead && (
+                  <span class="text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded-full">{book.yearRead}</span>
+                )}
+              </div>
+            </div>
+          </a>
+        );
+      })}
+
+      <a href="/books"
+         class="flex-none w-36 snap-start flex flex-col items-center justify-center aspect-[3/4] rounded-xl border-2 border-dashed border-slate-300 hover:border-sky-400 text-slate-400 hover:text-sky-500 transition-colors">
+        <i class="fas fa-th text-2xl mb-2"></i>
+        <span class="text-xs font-semibold text-center leading-tight">All {total}<br />books</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>

@@ -1,0 +1,183 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { getCollection } from 'astro:content';
+import { fetchGoodreadsBooks, fetchCurrentlyReading, normalizeTitle } from '../../lib/goodreads';
+import '../../styles/global.css';
+
+const reviewedEntries = await getCollection('books');
+const reviewMap = new Map(
+  reviewedEntries.map(e => [normalizeTitle(e.data.title), e.slug])
+);
+
+const [rssBooks, currentlyReadingRaw] = await Promise.all([
+  fetchGoodreadsBooks(),
+  fetchCurrentlyReading(),
+]);
+
+const fallback = reviewedEntries.map(e => ({
+  title: e.data.title,
+  author: e.data.author,
+  cover: e.data.cover ?? (e.data.isbn ? `https://covers.openlibrary.org/b/isbn/${e.data.isbn}-L.jpg` : ''),
+  goodreadsLink: e.data.goodreadsLink ?? '',
+  rating: e.data.rating,
+  yearRead: e.data.yearRead,
+  tags: e.data.tags,
+}));
+
+const readBooks = (rssBooks.length > 0 ? rssBooks : fallback)
+  .map(b => ({ ...b, reviewSlug: reviewMap.get(normalizeTitle(b.title)) ?? null, currentlyReading: false }))
+  .sort((a, b) => (b.yearRead ?? 0) - (a.yearRead ?? 0));
+
+const currentlyReading = currentlyReadingRaw.map(b => ({
+  ...b,
+  reviewSlug: reviewMap.get(normalizeTitle(b.title)) ?? null,
+  currentlyReading: true,
+}));
+
+// Currently reading at the top, then read books
+const allBooks = [...currentlyReading, ...readBooks];
+
+const yearsFromField = readBooks.map(b => b.yearRead).filter((y): y is number => y !== null);
+const yearsFromTags  = readBooks.flatMap(b => b.tags).filter(t => /^\d{4}$/.test(t)).map(Number);
+const years = [...new Set([...yearsFromField, ...yearsFromTags])].sort((a, b) => b - a);
+
+function stars(r: number) {
+  return r > 0 ? '★'.repeat(r) + '☆'.repeat(5 - r) : '';
+}
+---
+
+<Layout title="Books — Abhinav Verma">
+  <Nav />
+  <main class="pt-16">
+    <div class="max-w-6xl mx-auto px-6 sm:px-10 py-16">
+
+      <!-- Header -->
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-10">
+        <div>
+          <a href="/#books" class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-700 transition-colors mb-4">
+            <i class="fas fa-arrow-left text-xs"></i> Back
+          </a>
+          <h1 class="font-condensed text-5xl sm:text-6xl font-bold uppercase tracking-wide text-slate-900">
+            All Books
+          </h1>
+        </div>
+        <p class="text-slate-400">{readBooks.length} read · {currentlyReading.length} reading</p>
+      </div>
+
+      <!-- Filter bar: All | Currently Reading | 2026 | 2025 | ... -->
+      <div class="flex flex-wrap gap-2 mb-10" id="filter-bar">
+        <button data-filter="all"
+          class="filter-btn active-filter px-4 py-1.5 rounded-full text-sm font-medium bg-slate-900 text-white transition-colors">
+          All
+        </button>
+        {currentlyReading.length > 0 && (
+          <button data-filter="currently-reading"
+            class="filter-btn inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:border-emerald-300 hover:text-emerald-600 transition-colors">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            Currently Reading
+          </button>
+        )}
+        {years.map(year => (
+          <button data-filter={String(year)}
+            class="filter-btn px-4 py-1.5 rounded-full text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:border-slate-400 transition-colors">
+            {year}
+          </button>
+        ))}
+      </div>
+
+      <!-- Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5" id="books-grid">
+        {allBooks.map((book) => {
+          const href = book.reviewSlug ? `/books/${book.reviewSlug}` : book.goodreadsLink;
+          const filterVal = book.currentlyReading
+            ? 'currently-reading'
+            : [String(book.yearRead ?? ''), ...book.tags].filter(Boolean).join(' ');
+          return (
+            <a href={href} target={book.reviewSlug ? undefined : '_blank'}
+               class="book-card group"
+               data-filters={filterVal}>
+              <div class="relative aspect-[2/3] bg-slate-200 rounded-xl overflow-hidden shadow-sm group-hover:shadow-md transition-all duration-200">
+                <img
+                  src={book.cover}
+                  alt={book.title}
+                  loading="lazy"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  onerror="this.onerror=null; this.style.display='none'"
+                />
+                {book.currentlyReading && (
+                  <div class="absolute top-2 left-2">
+                    <span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded-full">
+                      <span class="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></span>
+                      Reading
+                    </span>
+                  </div>
+                )}
+                {book.reviewSlug && (
+                  <div class="absolute bottom-0 left-0 right-0 bg-sky-500 text-white text-[9px] font-bold text-center py-1 tracking-wider uppercase">
+                    Review ✦
+                  </div>
+                )}
+              </div>
+              <div class="mt-2 px-0.5">
+                <p class="text-xs font-semibold text-slate-800 line-clamp-2 leading-snug">{book.title}</p>
+                <p class="text-[11px] text-slate-400 mt-0.5 truncate">{book.author}</p>
+                {!book.currentlyReading && (
+                  <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                    {book.rating > 0 && (
+                      <span class="text-yellow-400 text-[10px]">{stars(book.rating)}</span>
+                    )}
+                    {book.yearRead && (
+                      <span class="text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded-full">{book.yearRead}</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const bookCards  = document.querySelectorAll<HTMLElement>('.book-card');
+
+  function applyFilter(filter: string) {
+    filterBtns.forEach(b => {
+      const active = b.dataset.filter === filter;
+      b.classList.toggle('bg-slate-900', active);
+      b.classList.toggle('text-white',   active);
+      b.classList.toggle('active-filter', active);
+      b.classList.toggle('bg-white',          !active);
+      b.classList.toggle('border',            !active);
+      b.classList.toggle('border-slate-200',  !active);
+      b.classList.toggle('text-slate-600',    !active);
+    });
+
+    bookCards.forEach(card => {
+      const cardFilters = (card.dataset.filters ?? '').split(' ');
+      const show = filter === 'all' || cardFilters.includes(filter);
+      (card as HTMLElement).style.display = show ? 'block' : 'none';
+    });
+
+    // Sync URL
+    const url = new URL(window.location.href);
+    if (filter === 'all') {
+      url.searchParams.delete('q');
+    } else {
+      url.searchParams.set('q', filter);
+    }
+    history.replaceState(null, '', url.toString());
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => applyFilter(btn.dataset.filter!));
+  });
+
+  // Apply filter from URL on load
+  const initial = new URLSearchParams(window.location.search).get('q') ?? 'all';
+  applyFilter(initial);
+</script>

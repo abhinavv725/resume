@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import About from '../components/About.astro';
+import Experience from '../components/Experience.astro';
+import Education from '../components/Education.astro';
+import Skills from '../components/Skills.astro';
+import Awards from '../components/Awards.astro';
+import Books from '../components/Books.astro';
+import Coffee from '../components/Coffee.astro';
+import '../styles/global.css';
+---
+
+<Layout>
+  <Nav />
+  <main>
+    <About />
+    <Experience />
+    <hr class="border-slate-100" />
+    <Education />
+    <hr class="border-slate-100" />
+    <Skills />
+    <hr class="border-slate-100" />
+    <Awards />
+    <hr class="border-slate-100" />
+    <Books />
+    <hr class="border-slate-100" />
+    <Coffee />
+  </main>
+</Layout>
