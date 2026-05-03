@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Build output — GitHub Actions builds this at deploy time
+dist/
+
+# Astro cache
+.astro/
+
+# OS
+.DS_Store
+
+# Local Claude settings
+.claude/settings.local.json
+
+# Env files
+.env
+.env.*
